@@ -1,6 +1,7 @@
 package de.guitarmgmt.manager.entities;
 
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -46,6 +47,26 @@ public class Guitar {
     // maintenance list
     @OneToMany(mappedBy = "guitar", cascade = CascadeType.ALL, orphanRemoval = true)
     @ToString.Exclude
-    private List <Maintenance> maintenance;
-    
+    private List<Maintenance> maintenance;
+
+    // notes
+    private String notes;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Guitar guitar = (Guitar) o;
+        return Objects.equals(id, guitar.id) &&
+                Objects.equals(manufacturer, guitar.manufacturer) &&
+                Objects.equals(model, guitar.model);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, manufacturer, model);
+    }
+
 }

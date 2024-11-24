@@ -73,7 +73,7 @@ public class GuitarController {
         return ResponseEntity.ok(guitarService.getGuitarsByScaleLength(scale));
     }
 
-    @GetMapping
+    @GetMapping("/tuning")
     public ResponseEntity<List<Guitar>> getGuitarsByTuning(@RequestParam String tuning) {
         return ResponseEntity.ok(guitarService.getGuitarsByTuning(tuning));
     }

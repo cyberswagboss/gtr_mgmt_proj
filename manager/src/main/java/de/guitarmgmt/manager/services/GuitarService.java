@@ -2,6 +2,7 @@ package de.guitarmgmt.manager.services;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import de.guitarmgmt.manager.entities.Guitar;
@@ -58,6 +59,16 @@ public class GuitarService {
 
     public List<Guitar> getGuitarsByTuning(String tuning){
         return guitarRepo.findByTuning(tuning);
+    }
+
+    public Guitar updateGuitarEntry(Guitar updatedGuitar, Long id){
+        if (!guitarExists(id)) {
+            throw new IllegalArgumentException("Guitar with ID " + id + " not found");
+        } else {
+            updatedGuitar.setId(id);
+            return guitarRepo.save(updatedGuitar);
+        }
+
     }
 
     public void deleteGuitar(Long id){

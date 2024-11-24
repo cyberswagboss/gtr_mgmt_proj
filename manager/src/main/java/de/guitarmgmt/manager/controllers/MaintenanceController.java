@@ -30,7 +30,7 @@ public class MaintenanceController {
         return ResponseEntity.ok(maintenanceService.addMaintenance(maintenance));
     }
 
-    @GetMapping
+    @GetMapping("/id")
     public ResponseEntity<Maintenance> getMaintenanceById(@RequestParam Long id){
         return ResponseEntity.ok(maintenanceService.getMaintenanceById(id));
     }
