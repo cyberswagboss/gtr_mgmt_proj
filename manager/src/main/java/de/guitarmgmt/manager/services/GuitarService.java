@@ -1,6 +1,7 @@
 package de.guitarmgmt.manager.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,8 @@ public class GuitarService {
         return guitarRepo.save(newGuitar);
     }
 
-    public Guitar getGuitarById(Long id){
-        return guitarRepo.findById(id).get();
+    public Optional<Guitar> getGuitarById(Long id){
+        return guitarRepo.findById(id);
     }
 
     public List<Guitar> getAllGuitars(){

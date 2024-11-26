@@ -32,7 +32,7 @@ public class GuitarController {
     @GetMapping("/id")
     public ResponseEntity<Guitar> getGuitarById(@RequestParam Long id) {
         if (guitarService.guitarExists(id)) {
-            return ResponseEntity.ok(guitarService.getGuitarById(id));
+            return ResponseEntity.ok(guitarService.getGuitarById(id).get());
         } else {
             return ResponseEntity.notFound().build();
         }
