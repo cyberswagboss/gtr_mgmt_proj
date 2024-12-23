@@ -27,6 +27,7 @@ public class Guitar {
     private String manufacturer;
     private String model;
     private String serial;
+    private String instrumentType;
 
     // player specific info
     private int numberOfStrings;
@@ -45,6 +46,7 @@ public class Guitar {
     private String bridge;
     private String pickupLayout;
     private String brigdePickup;
+    private String middlePickup;
     private String neckPickup;
 
     // maintenance list
