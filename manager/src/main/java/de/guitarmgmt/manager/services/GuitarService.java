@@ -22,6 +22,7 @@ public class GuitarService {
     }
 
     public Guitar addGuitar(Guitar newGuitar){
+        handleImage();
         return guitarRepo.save(newGuitar);
     }
 
@@ -73,5 +74,9 @@ public class GuitarService {
 
     public void deleteGuitar(Long id){
         guitarRepo.deleteById(id);
+    }
+
+    private void handleImage(){
+        
     }
 }

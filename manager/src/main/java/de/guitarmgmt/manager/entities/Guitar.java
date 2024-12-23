@@ -20,6 +20,9 @@ public class Guitar {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // string filepath
+    //private String imgPath;
+
     // general info
     private String manufacturer;
     private String model;
