@@ -45,7 +45,7 @@ public class Guitar {
     // hw info
     private String bridge;
     private String pickupLayout;
-    private String brigdePickup;
+    private String bridgePickup;
     private String middlePickup;
     private String neckPickup;
 

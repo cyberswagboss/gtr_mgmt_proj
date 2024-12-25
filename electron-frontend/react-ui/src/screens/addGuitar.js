@@ -12,28 +12,32 @@ import {
 } from "@mui/material";
 import bgimg from "../resources/bg-img-2.jpg";
 import { API_ROUTES } from "../apiGateway";
+import { useNavigate } from "react-router";
 
 const AddGuitarScreen = () => {
-    // State Hooks for All Inputs
+
+    const navigate = useNavigate();
+
     const [manufacturer, setManufacturer] = useState("");
     const [model, setModel] = useState("");
     const [serialNumber, setSerialNumber] = useState("");
     const [instrumentType, setInstrumentType] = useState("");
-    const [stringCount, setStringCount] = useState(null);
+    const [stringCount, setStringCount] = useState("");
     const [tuning, setTuning] = useState("");
     const [stringGauge, setStringGauge] = useState("");
     const [associatedProjects, setAssociatedProjects] = useState("");
     const [bodyMaterial, setBodyMaterial] = useState("");
     const [neckMaterial, setNeckMaterial] = useState("");
     const [fretboardMaterial, setFretboardMaterial] = useState("");
-    const [numberOfFrets, setFretCount] = useState(null);
-    const [scaleLength, setScaleLength] = useState(null);
+    const [numberOfFrets, setFretCount] = useState("");
+    const [scaleLength, setScaleLength] = useState("");
     const [bridge, setBridge] = useState("");
     const [pickupLayout, setPickupLayout] = useState("");
     const [bridgePickup, setBridgePickup] = useState("");
     const [middlePickup, setMiddlePickup] = useState("");
     const [neckPickup, setNeckPickup] = useState("");
     const [notes, setNotes] = useState("");
+    const [errors, setErrors] = useState({});
 
     const handleInstrumentChange = (event) => {
         setInstrumentType(event.target.value);
@@ -58,47 +62,69 @@ const AddGuitarScreen = () => {
     };
 
     const submitForm = async (e) => {
+        e.preventDefault();
+
+        let newErrors = {};
+        if (!manufacturer) newErrors.manufacturer = "Manufacturer is required";
+        if (!model) newErrors.model = "Model is required";
+        if (!serialNumber) newErrors.serialNumber = "Serial Number is required";
+        if (!instrumentType) newErrors.instrumentType = "Instrument Type is required";
+        if (!stringCount) newErrors.stringCount = "Number of Strings is required";
+        if (!tuning) newErrors.tuning = "Tuning is required";
+        if (!stringGauge) newErrors.stringGauge = "String Gauge is required";
+        if (!bodyMaterial) newErrors.bodyMaterial = "Body Material is required";
+        if (!neckMaterial) newErrors.neckMaterial = "Neck Material is required";
+        if (!fretboardMaterial) newErrors.fretboardMaterial = "Fretboard Material is required";
+        if (!numberOfFrets) newErrors.numberOfFrets = "Number of Frets is required";
+        if (!scaleLength) newErrors.scaleLength = "Scale Length is required";
+        if (!bridge) newErrors.bridge = "Bridge is required";
+        if (!pickupLayout) newErrors.pickupLayout = "Pickup Layout is required";
+
+        if ((pickupLayout === "HSH" || pickupLayout === "SSS") && !middlePickup)
+            newErrors.middlePickup = "Middle Pickup is required";
+        if ((pickupLayout === "HSS" || pickupLayout === "HH") && !neckPickup)
+            newErrors.neckPickup = "Neck Pickup is required";
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+
+        setErrors({});
+
         const guitarData = {
             manufacturer,
             model,
             serial: serialNumber,
             instrumentType,
-            numberOfStrings: stringCount,
+            numberOfStrings: parseInt(stringCount),
             tuning,
             stringGauge,
             associatedProjects,
             bodyMaterial,
             neckMaterial,
             fretboardMaterial,
-            numberOfFrets,
+            numberOfFrets: parseInt(numberOfFrets),
             scaleLength: parseFloat(scaleLength),
             bridge,
             pickupLayout,
             bridgePickup,
             middlePickup,
             neckPickup,
-            notes
+            notes,
         };
 
-        console.log("Guitar Data Submitted:", guitarData);
-
-        const api_path = API_ROUTES.BASE_URL + API_ROUTES.POST_ADD_GUITAR;
-        console.log("API-Path: ", api_path);
         try {
-            const repsonse = await fetch(API_ROUTES.BASE_URL + API_ROUTES.POST_ADD_GUITAR, {
+            const response = await fetch(API_ROUTES.BASE_URL + API_ROUTES.POST_ADD_GUITAR, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-
-                },
-                body: JSON.stringify(guitarData)
-            })
-
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(guitarData),
+            });
+            console.log(response);
+            navigate("/home");
         } catch (error) {
             console.error("Failed Posting: ", error);
         }
-
-
     };
 
     return (
@@ -143,6 +169,8 @@ const AddGuitarScreen = () => {
                         label="Manufacturer"
                         value={manufacturer}
                         onChange={(e) => setManufacturer(e.target.value)}
+                        error={!!errors.manufacturer}
+                        helperText={errors.manufacturer}
                         fullWidth
                     />
                     <TextField
@@ -150,6 +178,8 @@ const AddGuitarScreen = () => {
                         label="Model"
                         value={model}
                         onChange={(e) => setModel(e.target.value)}
+                        error={!!errors.model}
+                        helperText={errors.model}
                         fullWidth
                     />
                     <TextField
@@ -157,10 +187,12 @@ const AddGuitarScreen = () => {
                         label="Serial Number"
                         value={serialNumber}
                         onChange={(e) => setSerialNumber(e.target.value)}
+                        error={!!errors.serialNumber}
+                        helperText={errors.serialNumber}
                         fullWidth
                     />
 
-                    <FormControl fullWidth>
+                    <FormControl fullWidth error={!!errors.instrumentType}>
                         <InputLabel>Instrument Type</InputLabel>
                         <Select
                             value={instrumentType}
@@ -173,7 +205,7 @@ const AddGuitarScreen = () => {
                     </FormControl>
 
                     {instrumentType && (
-                        <FormControl fullWidth>
+                        <FormControl fullWidth error={!!errors.stringCount}>
                             <InputLabel>Number of Strings</InputLabel>
                             <Select
                                 value={stringCount}
@@ -194,6 +226,8 @@ const AddGuitarScreen = () => {
                         label="Tuning"
                         value={tuning}
                         onChange={(e) => setTuning(e.target.value)}
+                        error={!!errors.tuning}
+                        helperText={errors.tuning}
                         fullWidth
                     />
                     <TextField
@@ -201,6 +235,8 @@ const AddGuitarScreen = () => {
                         label="String Gauge"
                         value={stringGauge}
                         onChange={(e) => setStringGauge(e.target.value)}
+                        error={!!errors.stringGauge}
+                        helperText={errors.stringGauge}
                         fullWidth
                     />
                     <TextField
@@ -215,6 +251,8 @@ const AddGuitarScreen = () => {
                         label="Body Material"
                         value={bodyMaterial}
                         onChange={(e) => setBodyMaterial(e.target.value)}
+                        error={!!errors.bodyMaterial}
+                        helperText={errors.bodyMaterial}
                         fullWidth
                     />
                     <TextField
@@ -222,6 +260,8 @@ const AddGuitarScreen = () => {
                         label="Neck Material"
                         value={neckMaterial}
                         onChange={(e) => setNeckMaterial(e.target.value)}
+                        error={!!errors.neckMaterial}
+                        helperText={errors.neckMaterial}
                         fullWidth
                     />
                     <TextField
@@ -229,10 +269,12 @@ const AddGuitarScreen = () => {
                         label="Fretboard Material"
                         value={fretboardMaterial}
                         onChange={(e) => setFretboardMaterial(e.target.value)}
+                        error={!!errors.fretboardMaterial}
+                        helperText={errors.fretboardMaterial}
                         fullWidth
                     />
 
-                    <FormControl fullWidth>
+                    <FormControl fullWidth error={!!errors.numberOfFrets}>
                         <InputLabel>Number of Frets</InputLabel>
                         <Select
                             value={numberOfFrets}
@@ -251,6 +293,8 @@ const AddGuitarScreen = () => {
                         label="Scale Length"
                         value={scaleLength}
                         onChange={(e) => setScaleLength(e.target.value)}
+                        error={!!errors.scaleLength}
+                        helperText={errors.scaleLength}
                         fullWidth
                     />
                     <TextField
@@ -258,35 +302,149 @@ const AddGuitarScreen = () => {
                         label="Bridge"
                         value={bridge}
                         onChange={(e) => setBridge(e.target.value)}
+                        error={!!errors.bridge}
+                        helperText={errors.bridge}
                         fullWidth
                     />
-                    <TextField
-                        required
-                        label="Pickup Layout"
-                        value={pickupLayout}
-                        onChange={(e) => setPickupLayout(e.target.value)}
-                        fullWidth
-                    />
-                    <TextField
-                        required
-                        label="Bridge Pickup"
-                        value={bridgePickup}
-                        onChange={(e) => setBridgePickup(e.target.value)}
-                        fullWidth
-                    />
-                    <TextField
-                        label="Middle Pickup"
-                        value={middlePickup}
-                        onChange={(e) => setMiddlePickup(e.target.value)}
-                        fullWidth
-                    />
-                    <TextField
-                        required
-                        label="Neck Pickup"
-                        value={neckPickup}
-                        onChange={(e) => setNeckPickup(e.target.value)}
-                        fullWidth
-                    />
+                    <FormControl fullWidth error={!!errors.pickupLayout}>
+                        <InputLabel>Pickup Layout</InputLabel>
+                        <Select
+                            value={pickupLayout || ""}
+                            onChange={(e) => setPickupLayout(e.target.value)}
+                            fullWidth
+                        >
+                            <MenuItem value="HH">HH (2 Humbuckers)</MenuItem>
+                            <MenuItem value="HSH">HSH (Humbucker, Single Coil, Humbucker)</MenuItem>
+                            <MenuItem value="SSS">SSS (3 Single Coils)</MenuItem>
+                            <MenuItem value="H">H (1 Humbucker)</MenuItem>
+                            <MenuItem value="HSS">HSS (Humbucker, Single Coil, Single Coil)</MenuItem>
+                        </Select>
+                    </FormControl>
+
+                    {pickupLayout === "HH" && (
+                        <>
+                            <TextField
+                                required
+                                label="Bridge Pickup"
+                                value={bridgePickup}
+                                onChange={(e) => setBridgePickup(e.target.value)}
+                                error={!!errors.bridgePickup}
+                                helperText={errors.bridgePickup}
+                                fullWidth
+                            />
+                            <TextField
+                                required
+                                label="Neck Pickup"
+                                value={neckPickup}
+                                onChange={(e) => setNeckPickup(e.target.value)}
+                                error={!!errors.neckPickup}
+                                helperText={errors.neckPickup}
+                                fullWidth
+                            />
+                        </>
+                    )}
+
+                    {pickupLayout === "HSH" && (
+                        <>
+                            <TextField
+                                required
+                                label="Bridge Pickup"
+                                value={bridgePickup}
+                                onChange={(e) => setBridgePickup(e.target.value)}
+                                error={!!errors.bridgePickup}
+                                helperText={errors.bridgePickup}
+                                fullWidth
+                            />
+                            <TextField
+                                label="Middle Pickup"
+                                value={middlePickup}
+                                onChange={(e) => setMiddlePickup(e.target.value)}
+                                error={!!errors.middlePickup}
+                                helperText={errors.middlePickup}
+                                fullWidth
+                            />
+                            <TextField
+                                required
+                                label="Neck Pickup"
+                                value={neckPickup}
+                                onChange={(e) => setNeckPickup(e.target.value)}
+                                error={!!errors.neckPickup}
+                                helperText={errors.neckPickup}
+                                fullWidth
+                            />
+                        </>
+                    )}
+
+                    {pickupLayout === "SSS" && (
+                        <>
+                            <TextField
+                                label="Bridge Pickup"
+                                value={bridgePickup}
+                                onChange={(e) => setBridgePickup(e.target.value)}
+                                error={!!errors.bridgePickup}
+                                helperText={errors.bridgePickup}
+                                fullWidth
+                            />
+                            <TextField
+                                label="Middle Pickup"
+                                value={middlePickup}
+                                onChange={(e) => setMiddlePickup(e.target.value)}
+                                error={!!errors.middlePickup}
+                                helperText={errors.middlePickup}
+                                fullWidth
+                            />
+                            <TextField
+                                label="Neck Pickup"
+                                value={neckPickup}
+                                onChange={(e) => setNeckPickup(e.target.value)}
+                                error={!!errors.neckPickup}
+                                helperText={errors.neckPickup}
+                                fullWidth
+                            />
+                        </>
+                    )}
+
+                    {pickupLayout === "H" && (
+                        <TextField
+                            required
+                            label="Bridge Pickup"
+                            value={bridgePickup}
+                            onChange={(e) => setBridgePickup(e.target.value)}
+                            error={!!errors.bridgePickup}
+                            helperText={errors.bridgePickup}
+                            fullWidth
+                        />
+                    )}
+
+                    {pickupLayout === "HSS" && (
+                        <>
+                            <TextField
+                                required
+                                label="Bridge Pickup"
+                                value={bridgePickup}
+                                onChange={(e) => setBridgePickup(e.target.value)}
+                                error={!!errors.bridgePickup}
+                                helperText={errors.bridgePickup}
+                                fullWidth
+                            />
+                            <TextField
+                                label="Middle Pickup"
+                                value={middlePickup}
+                                onChange={(e) => setMiddlePickup(e.target.value)}
+                                error={!!errors.middlePickup}
+                                helperText={errors.middlePickup}
+                                fullWidth
+                            />
+                            <TextField
+                                label="Neck Pickup"
+                                value={neckPickup}
+                                onChange={(e) => setNeckPickup(e.target.value)}
+                                error={!!errors.neckPickup}
+                                helperText={errors.neckPickup}
+                                fullWidth
+                            />
+                        </>
+                    )}
 
                     <TextField
                         label="Notes"
