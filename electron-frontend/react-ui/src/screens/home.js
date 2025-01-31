@@ -1,4 +1,3 @@
-import MUIResponsiveAppBar from "../components/mui_appbar";
 import { Box, Button, Typography, Paper } from "@mui/material";
 import bgimg from "../resources/bg-img-2.jpg";
 import { useNavigate } from "react-router";
