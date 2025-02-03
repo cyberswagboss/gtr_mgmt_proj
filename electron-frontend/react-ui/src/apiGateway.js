@@ -3,6 +3,7 @@ export const API_ROUTES = {
     BASE_URL: "http://localhost:8081",
     // GuitarController endpoints
     POST_ADD_GUITAR: "/api/v1/guitars",
+    PUT_UPDATE_GUITAR: "api/v1/guitars/id",
     GET_GUITAR_BY_ID: "/api/v1/guitars/id", // Requires `id` as a query parameter
     GET_ALL_GUITARS: "/api/v1/guitars",
     GET_GUITARS_BY_MANUFACTURER: "/api/v1/guitars/manufacturer", // Requires `name` as a query parameter

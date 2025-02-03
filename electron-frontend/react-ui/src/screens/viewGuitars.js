@@ -14,7 +14,6 @@ import { API_ROUTES } from "../apiGateway";
 import { useNavigate } from "react-router";
 
 import GuitarContainer from "../components/guitarContainer";
-import GuitarDialogDetails from "../components/guitarDialogDetails";
 
 const ViewGuitarsScreen = () => {
     const [guitars, setGuitars] = useState([]);

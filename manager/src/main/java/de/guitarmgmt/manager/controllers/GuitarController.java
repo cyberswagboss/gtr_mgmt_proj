@@ -14,6 +14,9 @@ import de.guitarmgmt.manager.services.GuitarService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 @RequestMapping("/api/v1/guitars")
@@ -28,6 +31,12 @@ public class GuitarController {
     @PostMapping
     public ResponseEntity<Guitar> addGuitarPost(@RequestBody Guitar guitar) {
         return ResponseEntity.ok(guitarService.addGuitar(guitar));
+    }
+
+    @PutMapping("/id")
+    public ResponseEntity<Guitar> updateGuitarPut(@PathVariable Long id, @RequestBody Guitar guitar) {
+        return ResponseEntity.ok(guitarService.updateGuitarEntry(guitar, id));
+
     }
 
     @GetMapping("/id")
